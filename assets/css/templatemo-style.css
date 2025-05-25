@@ -12,7 +12,7 @@ body {
     font-family: 'Lato', sans-serif;
     min-height: 100vh;
     font-family: 'Lato', sans-serif;
-    cursor: url("../images/cursor img.png"), auto;
+    cursor: url("https://cdn.jsdelivr.net/gh/saadeghi/assets/cursor.png"), auto;
 }
 
 body, html {
