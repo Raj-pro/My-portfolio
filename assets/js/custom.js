@@ -76,9 +76,11 @@
 
   // Custom Cursor Logic
   const cursor = document.getElementById('custom-cursor');
+  const sun = document.querySelector('.section-banner-sun');
   let lastX = 0;
   let lastY = 0;
   let cursorAngle = 90; // Default angle (pointing up)
+  let isBurning = false;
 
   document.addEventListener('mousemove', (e) => {
     const x = e.clientX;
@@ -93,22 +95,90 @@
     const deltaY = y - lastY;
     
     // Only update rotation if there's significant movement
-    if (Math.abs(deltaX) > 1 || Math.abs(deltaY) > 1) {
+    if (Math.abs(deltaX) > 0.5 || Math.abs(deltaY) > 0.5) {
         // Calculate angle in radians and convert to degrees
         // Adding 90 degrees because the rocket points up by default
         cursorAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI) + 90;
     }
     
-    // Apply rotation
+    // Update last position for next frame
+    lastX = x;
+    lastY = y;
+    
+    // Apply rotation using CSS variable (works with animations)
+    cursor.style.setProperty('--cursor-rotation', `${cursorAngle}deg`);
     cursor.style.transform = `rotate(${cursorAngle}deg)`;
+    
+    // Check if cursor is over the sun
+    if (sun) {
+      const sunRect = sun.getBoundingClientRect();
+      const sunCenterX = sunRect.left + sunRect.width / 2;
+      const sunCenterY = sunRect.top + sunRect.height / 2;
+      const sunRadius = sunRect.width / 2;
+      
+      // Calculate distance from cursor to sun center
+      const distance = Math.sqrt(
+        Math.pow(x - sunCenterX, 2) + Math.pow(y - sunCenterY, 2)
+      );
+      
+      // Add burning effect to cursor if it's within sun radius
+      if (distance <= sunRadius) {
+        cursor.classList.add('burning');
+        isBurning = true;
+        // Create fire particles when burning
+        createFireParticles(x, y);
+      } else {
+        cursor.classList.remove('burning');
+        isBurning = false;
+      }
+    }
 
     // Create smoke particles
-    if (Math.abs(x - lastX) > 5 || Math.abs(y - lastY) > 5) {
+    if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
         createSmoke(x, y, cursorAngle);
-        lastX = x;
-        lastY = y;
     }
   });
+
+  function createFireParticles(x, y) {
+      // Create fire particles around the rocket
+      for (let i = 0; i < 2; i++) {
+          const fire = document.createElement('div');
+          fire.classList.add('fire-particle');
+          document.body.appendChild(fire);
+
+          // Random position around cursor
+          const offsetX = (Math.random() - 0.5) * 25;
+          const offsetY = (Math.random() - 0.5) * 25;
+          
+          fire.style.left = `${x + offsetX}px`;
+          fire.style.top = `${y + offsetY}px`;
+          
+          // Random fire colors (orange, red, yellow)
+          const colors = [
+              'rgb(255, 100, 0)',
+              'rgb(255, 50, 0)',
+              'rgb(255, 150, 0)',
+              'rgb(255, 200, 0)',
+              'rgb(255, 80, 20)'
+          ];
+          fire.style.color = colors[Math.floor(Math.random() * colors.length)];
+          fire.style.background = fire.style.color;
+          
+          // Random size - smaller
+          const size = 5 + Math.random() * 5;
+          fire.style.width = `${size}px`;
+          fire.style.height = `${size}px`;
+          
+          // Random horizontal drift
+          const drift = (Math.random() - 0.5) * 20;
+          fire.style.setProperty('--fx', `${drift}px`);
+
+          // Remove particle after animation
+          setTimeout(() => {
+              fire.remove();
+          }, 600);
+      }
+  }
 
   function createSmoke(x, y, angle) {
       // Spawn multiple particles for a denser trail

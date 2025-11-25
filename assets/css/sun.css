@@ -148,4 +148,58 @@
     top: 60px;
     animation: twinkling 2s infinite;
   }
+
+  /* Burning effect for cursor when hovering over sun */
+  #custom-cursor.burning {
+    filter: brightness(1.5) saturate(1.5) drop-shadow(0 0 10px #ff6600) drop-shadow(0 0 20px #ff9900);
+    animation: cursorBurn 0.2s ease-in-out infinite;
+  }
+
+  #custom-cursor.burning::before {
+    content: '';
+    position: absolute;
+    width: 110%;
+    height: 110%;
+    left: -5%;
+    top: -5%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 100, 0, 0.4), rgba(255, 50, 0, 0.2), transparent);
+    animation: flameGlow 0.3s ease-in-out infinite;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  #custom-cursor.burning::after {
+    content: '';
+    position: absolute;
+    width: 130%;
+    height: 130%;
+    left: -15%;
+    top: -15%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 150, 0, 0.3), rgba(255, 80, 0, 0.1), transparent);
+    animation: flameGlow 0.4s ease-in-out infinite reverse;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  @keyframes cursorBurn {
+    0%, 100% {
+      transform: scale(1) rotate(var(--cursor-rotation, 0deg));
+    }
+    50% {
+      transform: scale(1.1) rotate(var(--cursor-rotation, 0deg));
+    }
+  }
+
+  @keyframes flameGlow {
+    0%, 100% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
   
