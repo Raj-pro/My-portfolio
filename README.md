@@ -95,7 +95,6 @@ Note: the Express server currently does **not** serve the portfolio UI. The port
 │   ├── css/
 │   ├── images/
 │   └── js/
-├── vendor/
 ├── server.js
 └── package.json
 ```
