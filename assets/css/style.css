@@ -1293,7 +1293,30 @@ body:not(.loading) .hero-img-wrap {
 .sk-parent {
   perspective: 1000px;
   min-height: 280px;
+  position: relative;
 }
+
+@keyframes skRingPulse {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50%       { opacity: 0.75; transform: scale(1.02); }
+}
+
+.sk-parent::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 27px;
+  box-shadow: 0 0 28px 6px var(--sk-glow, rgba(91,140,255,0.3));
+  animation: skRingPulse 2.8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.sk-parent:nth-child(2)::before { animation-delay: -0.5s; }
+.sk-parent:nth-child(3)::before { animation-delay: -1.1s; }
+.sk-parent:nth-child(4)::before { animation-delay: -1.6s; }
+.sk-parent:nth-child(5)::before { animation-delay: -2.1s; }
+.sk-parent:nth-child(6)::before { animation-delay: -2.5s; }
 
 .sk-card {
   height: 100%;
@@ -1351,8 +1374,14 @@ body:not(.loading) .hero-img-wrap {
 .sk-c4 { width:  56px; transform: translate3d(0,0,62px);  top: 19px; right: 19px; transition-delay: 0.30s; }
 .sk-c5 {
   width: 38px; transform: translate3d(0,0,80px); top: 24px; right: 24px;
-  display: grid; place-content: center; font-size: 1rem;
+  display: grid; place-content: center;
+  color: rgba(255,255,255,0.88);
   transition-delay: 0.40s;
+}
+
+.sk-c5 svg {
+  display: block;
+  flex-shrink: 0;
 }
 
 .sk-content {
@@ -1383,14 +1412,21 @@ body:not(.loading) .hero-img-wrap {
   -webkit-backdrop-filter: blur(8px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.08) !important;
   color: rgba(255,255,255,0.72) !important;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease,
+              border-color 0.22s ease, color 0.22s ease !important;
+  cursor: default;
 }
 
 .sk-chips.sg-tags span:hover,
 .sk-chips.sg-tags span:focus {
-  background: linear-gradient(rgba(255,255,255,0.22), rgba(255,255,255,0.08)) !important;
-  border-color: rgba(255,255,255,0.22) !important;
+  background: linear-gradient(rgba(255,255,255,0.24), rgba(255,255,255,0.10)) !important;
+  border-color: rgba(255,255,255,0.28) !important;
   color: #fff !important;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.14) !important;
+  transform: scale(1.1) translateY(-2px) !important;
+  box-shadow:
+    0 0 14px 3px var(--sk-glow, rgba(91,140,255,0.45)),
+    0 8px 22px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.18) !important;
 }
 
 /* 3D tilt on hover */
